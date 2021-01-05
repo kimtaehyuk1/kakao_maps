@@ -1,4 +1,4 @@
-package com.example.kakao_maps;
+package com.taehyuk.kakao_maps;
 
 import org.junit.Test;
 
