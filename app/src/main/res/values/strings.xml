@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">kakao_maps</string>
+    <string name="daummap_key">5aab85b68d3a5f6edfbad7f5bab3da32</string>
+    <string name="restapi_key">KakaoAK 5d0ff8b0a626cd2ff7ba148462f35a79</string>
+
+    <string name="permission_1">[설정] > [권한] 에서 권한을 허용할 수 있습니다.</string>
+    <string name="permission_2">맵사용을 위해 위치정보 이용 권한이 필요합니다.</string>
 </resources>

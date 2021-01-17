@@ -1,4 +1,4 @@
-package com.taehyuk.kakao_maps;
+package com.taehyuk.kakao_maps.model.category_search;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Document  {
+public class Document implements Parcelable {
 
     @SerializedName("place_name")
     @Expose
@@ -142,54 +142,54 @@ public class Document  {
     }
 
 
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeString(this.placeName);
-//        dest.writeString(this.distance);
-//        dest.writeString(this.placeUrl);
-//        dest.writeString(this.categoryName);
-//        dest.writeString(this.addressName);
-//        dest.writeString(this.roadAddressName);
-//        dest.writeString(this.id);
-//        dest.writeString(this.phone);
-//        dest.writeString(this.categoryGroupCode);
-//        dest.writeString(this.categoryGroupName);
-//        dest.writeString(this.x);
-//        dest.writeString(this.y);
-//    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-//    public Document() {
-//    }
-//
-//    protected Document(Parcel in) {
-//        this.placeName = in.readString();
-//        this.distance = in.readString();
-//        this.placeUrl = in.readString();
-//        this.categoryName = in.readString();
-//        this.addressName = in.readString();
-//        this.roadAddressName = in.readString();
-//        this.id = in.readString();
-//        this.phone = in.readString();
-//        this.categoryGroupCode = in.readString();
-//        this.categoryGroupName = in.readString();
-//        this.x = in.readString();
-//        this.y = in.readString();
-//    }
-//
-//    public static final Creator<Document> CREATOR = new Creator<Document>() {
-//        @Override
-//        public Document createFromParcel(Parcel source) {
-//            return new Document(source);
-//        }
-//
-//        @Override
-//        public Document[] newArray(int size) {
-//            return new Document[size];
-//        }
-//    };
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.placeName);
+        dest.writeString(this.distance);
+        dest.writeString(this.placeUrl);
+        dest.writeString(this.categoryName);
+        dest.writeString(this.addressName);
+        dest.writeString(this.roadAddressName);
+        dest.writeString(this.id);
+        dest.writeString(this.phone);
+        dest.writeString(this.categoryGroupCode);
+        dest.writeString(this.categoryGroupName);
+        dest.writeString(this.x);
+        dest.writeString(this.y);
+    }
+
+    public Document() {
+    }
+
+    protected Document(Parcel in) {
+        this.placeName = in.readString();
+        this.distance = in.readString();
+        this.placeUrl = in.readString();
+        this.categoryName = in.readString();
+        this.addressName = in.readString();
+        this.roadAddressName = in.readString();
+        this.id = in.readString();
+        this.phone = in.readString();
+        this.categoryGroupCode = in.readString();
+        this.categoryGroupName = in.readString();
+        this.x = in.readString();
+        this.y = in.readString();
+    }
+
+    public static final Creator<Document> CREATOR = new Creator<Document>() {
+        @Override
+        public Document createFromParcel(Parcel source) {
+            return new Document(source);
+        }
+
+        @Override
+        public Document[] newArray(int size) {
+            return new Document[size];
+        }
+    };
 }
