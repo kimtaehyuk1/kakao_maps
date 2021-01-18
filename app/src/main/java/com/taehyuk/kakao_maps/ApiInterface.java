@@ -42,10 +42,10 @@ public interface ApiInterface
             @Query("size") int size
     );
 
-    //주소로 검색 (아직안쓰는중)
+    @Headers("Authorization: KakaoAK 854f125c22a59fae5ca1ac050c814371")
     @GET("v2/local/search/address.json")
     Call<AddressSearch> getSearchAddress(
-            @Header("Authorization") String token,
+//            @Header("Authorization") String token,
             @Query("query") String query,
             @Query("size") int size
     );

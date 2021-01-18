@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.taehyuk.kakao_maps.R;
-import com.taehyuk.kakao_maps.model.category_search.Document;
+import com.taehyuk.kakao_maps.model.address_search.Document;
 
 import java.util.ArrayList;
 
@@ -43,10 +43,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         items.clear();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return Long.parseLong(items.get(position).getId());
-    }
+//    @Override
+//    public long getItemId(int position) {
+//        return Long.parseLong(items.get(position).getId());
+//    }
 
     @Override
     public int getItemViewType(int position) {
@@ -64,12 +64,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     @Override
     public void onBindViewHolder(@NonNull LocationViewHolder holder, int i) {
         final Document model = items.get(i);
-        holder.placeNameText.setText(model.getPlaceName());
-        holder.addressText.setText(model.getAddressName());
+        holder.placeNameText.setText(model.getAddressName());
+//        holder.addressText.setText(model.getAddressName());
         holder.placeNameText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editText.setText(model.getPlaceName());
+                editText.setText(model.getAddressName());
                 recyclerView.setVisibility(View.GONE);
 //                BusProvider.getInstance().post(model);
             }
@@ -79,12 +79,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     public class LocationViewHolder extends RecyclerView.ViewHolder {
         TextView placeNameText;
-        TextView addressText;
+//        TextView addressText;
 
         public LocationViewHolder(@NonNull final View itemView) {
             super(itemView);
             placeNameText = itemView.findViewById(R.id.ltem_location_tv_placename);
-            addressText = itemView.findViewById(R.id.ltem_location_tv_address);
+//            addressText = itemView.findViewById(R.id.ltem_location_tv_address);
         }
     }
 }

@@ -21,17 +21,25 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.taehyuk.kakao_maps.adapter.LocationAdapter;
+import com.taehyuk.kakao_maps.model.address_search.AddressSearch;
 import com.taehyuk.kakao_maps.model.category_search.CategoryResult;
 import com.taehyuk.kakao_maps.model.category_search.Document;
 
@@ -57,9 +65,10 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
     private MapView mMapView;
     ViewGroup mMapViewContainer;
-    private TextView text;
     private Button btn;
-
+    EditText mSearchEdit;
+    RecyclerView recyclerView;
+    private TextView text;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -74,6 +83,8 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     boolean isTrackingMode = false;
     ArrayList<Document> bigMartList = new ArrayList<>();
 
+    ArrayList<com.taehyuk.kakao_maps.model.address_search.Document> documentArrayList = new ArrayList<>(); //지역명 검색 결과 리스트
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +97,6 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mMapViewContainer = findViewById(R.id.map_view);
         mMapViewContainer.addView(mMapView);
 
-        text = findViewById(R.id.test);
         btn = findViewById(R.id.btn);
         btn.setOnClickListener(new Button.OnClickListener() {
 
@@ -95,6 +105,75 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 requestSearchLocal(mCurrentLng, mCurrentLat);
             }
         });
+        text=findViewById(R.id.test);
+        mSearchEdit = findViewById(R.id.map_et_search);
+        recyclerView = findViewById(R.id.map_recyclerview);
+        LocationAdapter locationAdapter = new LocationAdapter(documentArrayList, getApplicationContext(), mSearchEdit, recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false); //레이아웃매니저 생성
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL)); //아래구분선 세팅
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(locationAdapter);
+
+        mSearchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                // 입력하기 전에
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if (charSequence.length() >= 1) {
+                    // if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+
+                    documentArrayList.clear();
+                    locationAdapter.clear();
+                    locationAdapter.notifyDataSetChanged();
+                    ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                    Call<AddressSearch> call = apiInterface.getSearchAddress( charSequence.toString(), 15);
+                    call.enqueue(new Callback<AddressSearch>() {
+                        @Override
+                        public void onResponse(@NotNull Call<AddressSearch> call, @NotNull Response<AddressSearch> response) {
+                            text.setText(response.toString());
+                            if (response.isSuccessful()) {
+                                assert response.body() != null;
+                                for (com.taehyuk.kakao_maps.model.address_search.Document document : response.body().getDocuments()) {
+                                    locationAdapter.addItem(document);
+                                }
+                                locationAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<AddressSearch> call, @NotNull Throwable t) {
+
+                        }
+                    });
+                    //}
+                    //mLastClickTime = SystemClock.elapsedRealtime();
+                } else {
+                    if (charSequence.length() <= 0) {
+                        recyclerView.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // 입력이 끝났을 때
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
         //mMapView.setDaumMapApiKey(MapApiConst.DAUM_MAPS_ANDROID_APP_API_KEY);
 //        mMapView.setCurrentLocationEventListener(this);
 
@@ -134,11 +213,11 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 
 
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);   // ApiInterface 객체에 레트로핏 객체를 매핑시키는 부분이다.
-        Call<CategoryResult> call = apiInterface.getSearchCategory( "MT1", x + "", y + "", 3000);
+        Call<CategoryResult> call = apiInterface.getSearchCategory( "MT1", x + "", y + "", 1000);
         call.enqueue(new Callback<CategoryResult>() {
             @Override
             public void onResponse(@NonNull Call<CategoryResult> call, @NonNull Response<CategoryResult> response) {
-                text.setText(response.toString());
+
                 if (response.isSuccessful()) {
 
 
@@ -149,7 +228,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
 //                   통신 성공 시 circle 생성
                     MapCircle circle1 = new MapCircle(
                             mapPointWithGeoCoord(y, x), // center
-                            3000, // radius
+                            1000, // radius
                             Color.argb(128, 255, 0, 0), // strokeColor
                             Color.argb(128, 0, 255, 0) // fillColor
                     );
@@ -181,7 +260,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             @Override
             public void onFailure(Call<CategoryResult> call, Throwable t) {
                 Log.d(LOG_TAG, "FAIL");
-                text.setText(t.toString());
+
             }
         });
 
