@@ -88,3 +88,5 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         }
     }
 }
+
+//여기서 커밋 테스트 합니다.
